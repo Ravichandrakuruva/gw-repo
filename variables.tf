@@ -16,4 +16,5 @@ variable "bucket_name2" {
 variable "project_id" {
   description = "project"
   type = string
+  default = "jan2026-483405"
 }
