@@ -1,0 +1,51 @@
+name: Terraform CI/CD
+
+# Trigger on merge to main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Terraform Plan & Apply
+    runs-on: ubuntu-latest
+
+    env:
+      # Optional: set GCP project and region
+      TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+      TF_VAR_region: ${{ secrets.GCP_REGION }}
+
+    steps:
+      # Step 1: Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.6  # pick the version you use
+
+      # Step 3: Authenticate with GCP using Service Account key stored in GitHub Secrets
+      - name: Authenticate to GCP
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/key.json
+
+      # Step 4: Terraform Init (includes remote backend)
+      - name: Terraform Init
+        run: terraform init
+
+      # Step 5: Terraform Validate
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Step 6: Terraform Plan
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      # Step 7: Terraform Apply
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'   # Only apply on main
+        run: terraform apply -auto-approve tfplan
