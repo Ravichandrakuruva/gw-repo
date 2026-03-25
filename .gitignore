@@ -1,0 +1,23 @@
+# Terraform local files
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Terraform variables (often sensitive)
+terraform.tfvars
+*.auto.tfvars
+
+# Service account keys
+*.json
+!*.tf.json
+
+# Crash logs
+crash.log
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# OS files
+.DS_Store
+Thumbs.db
