@@ -3,8 +3,14 @@ variable "region" {
   default = "us-central1"
 }
 
-variable "bucket_name" {
+variable "bucket_name1" {
   type = string
+  default = "gw-bucket-test-jan2026"
+}
+
+variable "bucket_name2" {
+  type = string
+  default = "gw-bucket-test-jan2026-1"
 }
 
 variable "project_id" {
